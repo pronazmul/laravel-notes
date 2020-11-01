@@ -1,0 +1,24 @@
+
+[{
+	"name": "programmer Nazmul Huda",
+	"email": "mhnazmul48@gmail.com",
+	"link": [
+		{"facebook": "facebook.com/mdnazmulhda"},
+		{"youtube": "pronazmul.com"},
+		{"linkedin": "linkedin.com"}
+	],
+	"Age": 20,
+	"Hardworker": true
+},
+{
+	"name": "programmer Nazmul Huda",
+	"email": "mhnazmul48@gmail.com",
+	"link": [
+		{"facebook": "facebook.com/mdnazmulhda"},
+		{"youtube": "pronazmul.com"},
+		{"linkedin": "linkedin.com"}
+	],
+	"Age": 20,
+	"Hardworker": true,
+	"Skills":["HTML","CSS","BOOTSTRAP","PHP","MySql","OOP","Ajax"]
+}]

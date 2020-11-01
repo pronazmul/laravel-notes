@@ -1,0 +1,128 @@
+
+
+..........File receive & Sent to controller by axios.............
+
+$(document).ready( function(){
+		$('#upload').click(function(){
+			let img = $('#img').prop('files')[0];
+			let imgName = img.name;
+			let imgSize = img.size;
+			let imgExt = imgName.split('.').pop().toLowerCase();
+			
+			let url = '/upload';
+			let data = new FormData();
+				data.append('fileKey', img);
+			let config = { headers:{'content-type':'multipart/form-data'}};
+			
+
+			axios.post(url, data, config)
+			.then(function(response){
+				
+				alert(response.data);   //Here Data means any types of string or text data will be shown. 
+			
+			}).catch(function(error){
+
+			})
+			
+		});
+});
+
+.........................Validation inside Axios..........................
+
+			let url = '/upload';
+			let data = new FormData();
+		axios.post(url, data, config).then(function(response){
+			if (response.status==200) {
+					$('#upload').html('Upload Success');  
+					$('#img').val('');
+
+				setTimeout(function(){
+				$('#upload').html('Upload Photo');	
+				},2000);
+
+			}else{
+
+				$('#upload').html('Upload Failed');
+				$('#img').val('');
+				setTimeout(function(){
+				$('#upload').html('Upload Photo');		
+				},2000);
+			}
+
+		}).catch(function(error){ });
+
+			
+..........................Show Uploading Persentage using Axios property inside config.......................
+
+	let config = {
+		headers:{'content-type': 'multipart/form-data'},
+
+		onUploadProgress: function(progressEvent){
+
+			let progress = Math.round((progressEvent.loaded*100)/progressEvent.total);
+
+			let progressbar= "<div class='progress mt-3'><div class='progress-bar' 
+					style='width:"+progress+"%'>"+progress+"%</div></div>";
+			$('#response').html(progressbar);
+
+			let totalMB  = (progressEvent.total)/(1028*1028);
+			let loadedMB = (progressEvent.loaded)/(1028*1028);
+			let dueMB  	 = totalMB - loadedMB;
+
+		$('#response').html('Total Size : '+ totalMB.toFixed(2) + 'MB <br> Uploaded : '+ loadedMB.toFixed(2) + 'MB 
+				<br> Due : '+ dueMB.toFixed(2) + 'MB <br> Persentage : '+ progress + '%');
+
+		}
+
+
+.....................................Download file............................
+		use Illuminate\Support\Facades\Storage;	
+
+	public function Download(){	
+		$result =  Storage::download('images/ALamin4.jpg','Developer Nazmul.png');
+		return $result;
+		}
+
+....................................Download/Delete Request By url..................
+"<td><a href='/download/"+dataJson[i].filepath+"'><span> <i class='fas fa-download'> </i> </span></a></td>"+
+
+"<td><a href='/delete/"+dataJson[i].filepath+"/"+dataJson[i].id+"'><span> <i class='fas fa-trash-alt'> </i> </span></a></td>"
+
+............ Receive Form Route.....................
+Route::get('/download/{folder}/{path}','fileMannage@download');
+Route::get('/delete/{folder}/{path}/{id}','fileMannage@delete');
+
+.................Operation of Controller..........
+
+////Download File
+        public function download($folder, $path){
+             	
+        	return $data = Storage::download($folder."/".$path,"photo.png");
+    }
+
+
+///    Delete File...
+        public function delete($folder, $path, $id){
+             	
+        	 Storage::delete($folder."/".$path);
+        	 fileModel::where('id',$id)->delete();
+        	 return view('files');
+    }
+///Insert File
+        public function insertFileData(Request $req){
+
+    	//Store File in Laravel Store Folder.
+        	$file = $req ->file('fileKey') ->store('public');
+
+        	//Insert File Name in Database.....
+        	$result = fileModel::insert(['filename'=>'File Name', 'filepath' => $file]);
+
+    }
+
+
+
+
+
+
+
+

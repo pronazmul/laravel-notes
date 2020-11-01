@@ -1,0 +1,73 @@
+
+/Create Function using one Argument...
+function sutoHat($value) {
+	return "<span style='text-transform:uppercase'>$value</span>";
+}
+
+  echo sutoHat($text);
+
+$text = " I am nazmul Huda A Laravel Developer";
+
+
+// Two argument in single Parameter using Conditional Statement....
+function textTransfrom($text, $type){
+
+	if ($type == 'c') {
+		 return "<span style='text-transform:uppercase;'>$text</span>";
+	}
+	elseif($type == 's'){
+		return "<span style='text-transform:lowercase;'>$text</span>";
+	}elseif( $type == 'r'){
+		return "<bdo dir='rtl'>$text</bdo>";
+	}else{
+		return "undefined Syntex";
+	}
+}
+echo textTransfrom('Ami Vat Khai', 'k');
+
+
+//Create Conditional Function using Swtch Case Statement...
+
+function letterCase($txt, $type){
+
+switch ($type) {
+	
+	case 'C':
+	return "<span style='text-transform:uppercase;'>$txt</span>";
+	break;
+
+	case 'S':
+	return "<span style='text-transform:lowercase;'>$txt</span>";
+	break;
+
+	case 'R':
+	return "<bdo dir='rtl'>$txt</bdo>";
+	break;
+	
+	default:
+	return "Your Syntex is Undefiened, Plz use Second Peramenter like C to get text Capitalize Or S to get Smallercase or R to get reverse";
+}
+}
+
+echo letterCase('ami banglay Gaan Gai ami banglar kotha koi',
+'c');
+
+
+///Arrays....
+$store = [
+
+	'sobji' => ['alo', 'peaj','morich','adda'],
+	'mas'	=> ['rui', 'katla', 'sing', 'magur'],
+	'programmer' => 'Nazmul Huda'
+];
+
+echo $store['sobji']['3'];
+?>
+<pre>
+	<?php
+	//var_dump($store);
+	print_r($store);
+	?>
+</pre>
+
+

@@ -1,0 +1,20 @@
+
+..........................Uses of DataTablePlugins.................
+
+!)datatables.min.css
+!)datatables.min.js
+
+...................Use Data Table in response.status==200 if block.......................
+
+$('#tableID').DataTable();
+$('.dataTables_length').addClass('bs-select'); //Selector Class In Table.
+
+...............Use Table Function Properties For Order By ..................
+
+$('#tableID').DataTable({"order":false});
+Model::orderBy('id','desc')->get();
+
+...................Destroy Data Table Before if block.......................
+
+$('#serviceMainTable').DataTable().destroy();
+$('#service_table').empty();

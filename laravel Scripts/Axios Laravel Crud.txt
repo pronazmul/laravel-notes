@@ -1,0 +1,278 @@
+
+// jQuery Laravel Axios.......
+
+$(document).ready(function() {
+    selectStudent();
+
+    //Function To Select Student Data....
+    function selectStudent() {
+
+        axios.get('/selectStudent')
+            .then(function(response) {
+                if (response.status == 200) {
+
+                    $('#studentTable').removeClass('d-none');
+                    $('#loader').addClass('d-none');
+                    let jsonData = response.data;
+                    $('#dataToTbody').empty();
+                    $.each(jsonData, function(i, item) {
+                        $('<tr>').html(
+                            "<td>" + jsonData[i].name + "</td>" +
+                            "<td>" + jsonData[i].email + "</td>" +
+                            "<td>" + jsonData[i].cell + "</td>" +
+                            "<td>" + jsonData[i].address + "</td>" +
+                            "<td> <a id='editStudent' editId=" + jsonData[i].id + " class='btn btn-sm btn-info mr-1' ><i class='fas fa-edit'></i></a><a id='deleteStudent' deleteId=" + jsonData[i].id + " class='btn btn-sm btn-danger'><i class='fas fa-trash-alt'></i></a></td>"
+                        ).appendTo('#dataToTbody')
+
+                    });
+
+
+                    $('a#editStudent').click(function() {
+                        let id = $(this).attr('editId');
+                        $('#editStudentModal').modal('show');
+                        dataForUpdate(id);
+
+                    });
+
+                    $('a#deleteStudent').click(function() {
+                        let id = $(this).attr('deleteId');
+                        $('#deleteStudentModal').modal('show');
+                        $('#btnDeleteModal').attr('delete', id);
+                    });
+
+                } else {
+
+                    $('#somethingWrong').removeClass('d-none');
+                    $('#loader').addClass('d-none');
+                }
+            }).catch(function(error) {
+
+                $('#somethingWrong').removeClass('d-none');
+                $('#loader').addClass('d-none');
+            });
+    }
+
+   //Open Add Student Modal...
+    $('#addStudent').click(function() {
+       	 $('#addStudentModal').modal('show');
+    });
+
+    //Collect Add Student Modal Data
+    $('#insertBtnModal').click(function() {
+
+        let name = $('input#addStudentName').val();
+        let email = $('input#addStudentEmail').val();
+        let cell = $('input#addStudentCell').val();
+        let address = $('input#addStudentAddress').val();
+        insertStudent(name, email, cell, address);
+
+        $('input#addStudentName').val('');
+        $('input#addStudentEmail').val('');
+        $('input#addStudentCell').val('');
+        $('input#addStudentAddress').val('');
+    });
+
+    //Function To insert Student Data
+    function insertStudent(stName, stEmail, stCell, stAddress) {
+        if (stName.length == 0) {
+            toastr.error('ERROR! Type Name.');
+        } else if (stEmail.length == 0) {
+            toastr.error('ERROR! Type Email.');
+        } else if (stCell.length == 0) {
+            toastr.error('ERROR! Type Cell.');
+        } else if (stAddress.length == 0) {
+            toastr.error('ERROR! Type Address.');
+        } else {
+            axios.post('/insertStudent', {
+                name: stName,
+                email: stEmail,
+                cell: stCell,
+                address: stAddress
+            }).then(function(response) {
+                if (response.status == 200) {
+                    $('#addStudentModal').modal('hide');
+                    toastr.success('SUCCESS! Successfully Inserted.');
+                    selectStudent();
+                } else {
+                    $('#addStudentModal').modal('hide');
+                    toastr.error('ERROR! Failed To Insert.');
+                }
+
+            }).catch(function(error) {
+                $('#addStudentModal').modal('hide');
+                toastr.error('ERROR! Failed To Insert.');
+            });
+        };
+    };
+
+    //Function To Get Specific Data For Update...
+    function dataForUpdate(stId) {
+
+        axios.post('/dataForUpdate', {
+            id: stId
+        }).then(function(response) {
+            if (response.status == 200) {
+                let data = response.data;
+
+                $('input#updateStudentName').val(data[0].name);
+                $('input#updateStudentEmail').val(data[0].email);
+                $('input#updateStudentCell').val(data[0].cell);
+                $('input#updateStudentAddress').val(data[0].address)
+                $('#btnUpdateModal').attr('update', data[0].id);
+
+            } else {  }
+
+        });
+    }
+
+    //Collect Update Modal Data
+    $('#btnUpdateModal').click(function() {
+
+        let name = $('input#updateStudentName').val();
+        let email = $('input#updateStudentEmail').val();
+        let cell = $('input#updateStudentCell').val();
+        let address = $('input#updateStudentAddress').val();
+        let id = $('#btnUpdateModal').attr('update');
+
+        studentUpdate(id, name, email, cell, address);
+    });
+    //Function To Update Student Data
+    function studentUpdate(id, name, email, cell, address) {
+
+        if (name.length == 0) {
+            toastr.error('ERROR! Type Name.');
+        } else if (email.length == 0) {
+            toastr.error('ERROR! Type Email.');
+        } else if (cell.length == 0) {
+            toastr.error('ERROR! Type Cell.');
+        } else if (address.length == 0) {
+            toastr.error('ERROR! Type Address.');
+        } else {
+
+            axios.post('/studentUpdate', {
+                id: id,
+                name: name,
+                email: email,
+                cell: cell,
+                address: address
+            }).then(function(response){
+            	console.log(response);
+
+                if (response.status==200) {
+                    $('#editStudentModal').modal('hide');
+                    toastr.success('SUCCESS! Successfully Updated.');
+                    selectStudent();
+                } else {
+                    $('#editStudentModal').modal('hide');
+                    toastr.error('ERROR! Failed To Update.');
+                }
+            }).catch(function(error) {
+                $('#editStudentModal').modal('hide');
+                toastr.error('ERROR! Failed To Update.');
+            });
+        };
+    };
+
+    //Collect Update Modal Data
+    $('#btnDeleteModal').click(function() {
+
+        let id = $(this).attr('delete');
+        deleteStudent(id);
+    });
+
+    //Function Delete Table Data 
+    function deleteStudent(idDel) {
+
+    	axios.post('/deleteStudent',{id:idDel})
+    	.then(function(response){
+    		if (response.status==200) {
+    			$('#deleteStudentModal').modal('hide');
+                selectStudent();
+    			toastr.success('SUCCESS! Delete Success.');
+
+    		}else{
+    			$('#deleteStudentModal').modal('hide');
+    			toastr.error('ERROR! Delete Failed.');
+    		}  		
+
+    	}).catch(function(error){
+    			$('#deleteStudentModal').modal('hide');
+    			toastr.error('ERROR! Delete Failed.');
+    	});
+    }
+
+});
+
+
+
+/////Laravel Route Setup...
+Route::get('/', 'siteController@homePage');
+
+//Crud Application
+Route::get('/students', 'siteController@getStudents');
+Route::get('/selectStudent', 'siteController@selectStudent');
+Route::post('/insertStudent', 'siteController@insertStudent');
+Route::post('/dataForUpdate', 'siteController@dataForUpdate');
+Route::post('/studentUpdate', 'siteController@studentUpdate');
+Route::post('/deleteStudent', 'siteController@deleteStudent');
+
+
+//Laravel Controller Mannagement: 
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\studentModel;
+
+class siteController extends Controller
+{
+    public function homePage(){
+    	return view('home');
+    }
+
+    public function getStudents(){
+    	return view('students');
+    }
+
+    //Insert Student Data......
+    public function insertStudent(Request $req){
+      	$name = $req ->input('name');
+      	$email = $req ->input('email');
+      	$cell = $req ->input('cell');
+      	$address = $req ->input('address');
+    	
+    	$result = studentModel::insert(['name'=> $name, 'email'=> $email, 'cell'=> $cell, 'address'=> $address ]);
+
+    	return $result;
+    }
+
+    //Select Student Data......
+    public function selectStudent(){
+      	$data = studentModel::all();
+    	return $data;
+    }
+    public function dataForUpdate(Request $req){
+      	$id = $req->input('id');
+        	$result = studentModel::where('id',$id)->get();
+    	return $result;
+    }
+ //Update Student Data......
+    public function studentUpdate(Request $request){
+    	$id = $request ->input('id');
+      	$name = $request ->input('name');
+      	$email = $request ->input('email');
+      	$cell = $request ->input('cell');
+      	$address = $request ->input('address');
+    	
+    	$result = studentModel::where('id', $id) ->update(['name'=> $name, 'email'=> $email, 'cell'=> $cell, 'address'=> $address]);
+
+    	return $result;
+    }
+    public function deleteStudent(Request $req){
+        $id = $req->input('id');
+          $result = studentModel::where('id',$id)->delete();
+      return $result;
+    }
+}
+
+
+
+

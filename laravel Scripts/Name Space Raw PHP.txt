@@ -1,0 +1,20 @@
+
+................connect Admin using Spl Autoload resister...............
+<?php
+spl_autoload_register(function($c_name){
+	$class = $c_name. ".php";
+	if (file_exists($class)) {
+		require_once $class;
+	}else{ return false;}
+});
+?>
+
+..............connecnt in required page.................
+
+<?php
+require_once dirname(__FILE__). "/autoload.php";
+
+use Apps\Libs\Classes\Admins\Admin;
+
+$admin = new Admin;
+?>

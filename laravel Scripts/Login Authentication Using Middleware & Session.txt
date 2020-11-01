@@ -1,0 +1,45 @@
+
+
+# Set Value in Session:
+		Set By Request Class & Session Method.
+		$request-> session()->put(‘key’, ‘value’);
+Set By Session Class 
+		use Illuminate\Support\Facades\Session;
+		Session::put(‘key’, ‘value’);
+
+Setup MiddleWare:
+	Step:1 - Php artisan make:middleware loginMiddleware;
+
+	Step:2- Go in handle() method of created middleware & Check The Session.
+		if ($request->session()->has('user')) {return $next($request);}
+		else{return redirect('/login');}
+
+	Step:3- Karne.php File & Set a route mIddleware:
+		'loginCheck'=> \App\Http\Middleware\loginCheckMiddleware::class,
+
+	Step:4- Use Middleware:
+		Route::get('/', 'mainController')->middleware('loginCheck');
+
+User Logout Syntex:
+
+		$req -> session()->flush();
+		return redirect('/login');
+
+Set Session in Blade View:
+	{{Session::get('name')}}
+
+Conditional Login & Logout Button set in Blade: 
+
+            @if(Session::has('name'))
+                <a class="nav-link btn btn-danger btn-sm text-light" href="{{url('/logout')}}">Logout</a>
+            @else    
+                <a class="nav-link nav-font" href="{{url('/login')}}">Login</a>
+            @endif
+
+
+ Also, Can Set Middleware in Controller:
+	Create –construct() function in controller Class;
+	 Syntax:
+		function –construc(){
+			$this->middleware('check');
+				    }
