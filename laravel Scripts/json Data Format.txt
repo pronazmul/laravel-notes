@@ -21,4 +21,4 @@
 	"Age": 20,
 	"Hardworker": true,
 	"Skills":["HTML","CSS","BOOTSTRAP","PHP","MySql","OOP","Ajax"]
-}]
+}] 
