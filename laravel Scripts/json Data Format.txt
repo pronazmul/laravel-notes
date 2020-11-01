@@ -1,7 +1,7 @@
 
 [{
 	"name": "programmer Nazmul Huda",
-	"email": "mhnazmul48@gmail.com",
+	"email": "mhnazmul48@gmail.com", 
 	"link": [
 		{"facebook": "facebook.com/mdnazmulhda"},
 		{"youtube": "pronazmul.com"},
